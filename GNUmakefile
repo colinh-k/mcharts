@@ -74,9 +74,22 @@ run:
 clean:
 	rm -rf ./$(BUILD_DIR)
 
+# this target expects a command-line var 'profile' to be specified
+# when invoked
+add-path:
+	@$(if $(strip $(profile)), \
+		  echo "export PATH=$(shell pwd)/$(BIN_DIR):$$""PATH" >> $(profile); \
+		  echo successfully appended to $(profile), \
+		  $(error 'profile' is undefined))
+add-alias:
+	@$(if $(strip $(profile)), \
+		  echo "alias mcharts=$(shell pwd)/$(TARGET)" >> $(profile); \
+		  echo successfully appended alias to $(profile), \
+		  $(error 'profile' is undefined))
+
 
 # auto make build directories
 $(BUILD_DIR) $(OBJ_DIR) $(BIN_DIR):
 	@mkdir -p $@
 
-.PHONY: clean all run debug leaks
+.PHONY: clean all run debug leaks path
